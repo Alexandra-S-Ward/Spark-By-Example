@@ -6,9 +6,11 @@ import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.{array_contains, col, lit, udf}
 trait Variable{
   val path : String = "C:\\Users\\lexaw\\Downloads\\warehouse\\payments.csv"
+  val orderPath : String = "C:\\Users\\lexaw\\Downloads\\warehouse\\orderdetails.csv"
   val sc = SparkSession.builder.master("local[*]").appName("SparkByExamples Tutorial").getOrCreate
   sc.sparkContext.setLogLevel("ERROR")
   val rdd = sc.read.option("header","true").option("inferSchema","true").csv(path)
+  val rddForJoins = sc.read.option("header","true").option("inferSchema","true").csv(orderPath)
 }
 
 object Main extends App with Variable {
@@ -59,7 +61,7 @@ object Main extends App with Variable {
   noDuplicateOrders.show
 
   // Functions!
-  val getInteger = (amount : String) => {
+  val getInteger = (amount : String)z => {
     amount.split(".").mkString
   }
   val convertUDF = udf(getInteger)
